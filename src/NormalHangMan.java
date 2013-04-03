@@ -8,16 +8,10 @@
  * <p>This class can then be used by a user interface to administer a regular game of Hangman.</p>
  */
 import java.util.*;
-public class NormalHangMan implements HangmanGame
+public class NormalHangMan extends Hangman
 {
     
-
-	private String OriginSecretWord = "";//To store the secret word
-    private int GuessRemainingNum;//to store the number of guess for the user
     private int LetterLeftNum;//to store the number of the letters in the secret word has not been guessed correctly
-    private String CurrentState = "";//store the current guessing situation
-    private String LetterGuessHistory = "";//store the letter user has tried
-    private char LetterGuess;//the letter the user guess right now
 
     /**
      * Constructor sets up the game to be played with a word and some number of
@@ -31,11 +25,11 @@ public class NormalHangMan implements HangmanGame
      */
     public NormalHangMan(String secretWord, int numGuesses, String LetterHistory){
         OriginSecretWord = secretWord;
-        GuessRemainingNum = numGuesses;
+        remainingGuesses = numGuesses;
         LetterLeftNum = secretWord.length();
         for(int i = 0; i < secretWord.length(); i++)
         {
-            CurrentState += "_ ";
+        	currentGuess += "_ ";
             for(int j = i; j > 0; j--)
             {
                 if(secretWord.charAt(i) == secretWord.charAt(j-1))
@@ -45,48 +39,37 @@ public class NormalHangMan implements HangmanGame
                 }
             }
         }
-        LetterGuessHistory = LetterHistory;
+        letterGuessHistory = LetterHistory;
     }   
 
-    public String getSecretWord()
-    {
-        return OriginSecretWord;
-    }
-    public int numGuessesRemaining()
-    {
-        return GuessRemainingNum;
-    }
+
+   
     public int numLettersRemaining()
     {
         return LetterLeftNum;
     }
+    
+    
     public boolean isWin()
     {
-        if(GuessRemainingNum == 0)
+        if(remainingGuesses == 0)
             return false;//if the user have no chance to guess again, it means the user loses.
         else
             return true;
     }
     public boolean gameOver()
     {
-        if(GuessRemainingNum == 0 || LetterLeftNum == 0)
+        if(remainingGuesses == 0 || LetterLeftNum == 0)
             return true;
         else
             return false;
     }
-    public String lettersGuessed()
-    {
-        return LetterGuessHistory;
-    }
-    public String displayGameState()
-    {
-        return CurrentState;
-    }
+
     public boolean makeGuess(char ch)
     {
     	if (Character.isLetter(ch) == false) return false;
         boolean tempB = true;
-        LetterGuess = ch;
+        letterGuess = ch;
         int i;
         for(i = 0; i < OriginSecretWord.length(); i++)
         {
@@ -101,10 +84,10 @@ public class NormalHangMan implements HangmanGame
                     }
                     else
                     {
-                        temp = temp + CurrentState.charAt(2*j) + CurrentState.charAt(2*j+1);              
+                        temp = temp + currentGuess.charAt(2*j) + currentGuess.charAt(2*j+1);              
                     }
                 }
-                CurrentState = temp;
+                currentGuess = temp;
                 tempB = true;
                 break;
             }
@@ -115,7 +98,7 @@ public class NormalHangMan implements HangmanGame
         }
         if(!RepeatInput(ch))
         {
-            LetterGuessHistory = LetterGuessHistory + LetterGuess;
+            letterGuessHistory = letterGuessHistory + letterGuess;
 
             if(tempB)
             {
@@ -123,19 +106,13 @@ public class NormalHangMan implements HangmanGame
             }
             else
             {
-                GuessRemainingNum--;
+            	remainingGuesses--;
             }
             return tempB;
         }
         else return false;
     }
-    public boolean RepeatInput(char c)
-    {
-    	for (int i = 0; i < LetterGuessHistory.length(); i++) {
-    		if (LetterGuessHistory.charAt(i) == c) return true;
-    	}
-    	return false;
-    }
+
     
    
 }

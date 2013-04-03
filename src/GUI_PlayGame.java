@@ -9,7 +9,7 @@ public class GUI_PlayGame implements ActionListener
     private JLabel label1;
     private JLabel label2;
     private JLabel label3;
-    private HangmanGame game;
+    private Hangman game;
     private char InputLetter;
     private boolean IsEvil = true;
     private JLabel result;

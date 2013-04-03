@@ -2,19 +2,14 @@ import java.util.*;
 import java.io.*;
 
 
-public class EvilHangMan implements HangmanGame {
-	private String secretWord = "";// To store the secret word
-	private int guess;// to store the number of guess for the user
-	private String state = "";// store the current guessing situation
-	private String letterGuessHistory = "";// store the letters user has tried
-	private char l;// the letter the user guess right now
+public class EvilHangMan extends Hangman{
 	private String[] Wordlist = new String[235000];// to store the dictionary
 	private int numWords = 0;// count the number of possible secret words.
 	private int secretStringLength;// the length of the secret string
 	private boolean GuessResult = false;
 
 	public EvilHangMan(int StringLength, int numGuesses) {
-		guess = numGuesses;
+		remainingGuesses = numGuesses;
 		secretStringLength = StringLength;
 		Scanner Scanner = null;
 		try {
@@ -33,18 +28,13 @@ public class EvilHangMan implements HangmanGame {
 		}
 
 		for (i = 0; i < StringLength; i++) {
-			state += "_ ";
+			currentGuess += "_ ";
 		}
 		Scanner.close();
 	}
 
-	public String getSecretWord() {
-		return secretWord;
-	}
+	
 
-	public int numGuessesRemaining() {
-		return guess;
-	}
 
 	public int numLettersRemaining() {
 		return 26; // because they never get one right!
@@ -55,24 +45,16 @@ public class EvilHangMan implements HangmanGame {
 	}
 
 	public boolean gameOver() {
-		if (guess == 0)
+		if (remainingGuesses == 0)
 			return true;
 		else
 			return false;
 	}
 
-	public String lettersGuessed() {
-		return letterGuessHistory;
-	}
-
-	public String displayGameState() {
-		return state;
-	}
-
-
+	
 	public boolean makeGuess(char ch) {
 		GuessResult = false;
-		l = ch;
+		letterGuess = ch;
 		if (Character.isLetter(ch) && !RepeatInput(ch)) {
 			// adjust the Wordlist in order to avoid the word with the letter
 			// user guessed
@@ -110,17 +92,17 @@ public class EvilHangMan implements HangmanGame {
 			}
 			if (tempWordNum == 0) {
 
-				secretWord = Wordlist[0];
+				OriginSecretWord = Wordlist[0];
 				GuessResult = true;
 			} else {
-				secretWord = temp[0];
+				OriginSecretWord = temp[0];
 				numWords = tempWordNum;
 				Wordlist = temp;
-				guess--;
+				remainingGuesses--;
 				GuessResult = false;
 			}
 			if (!GuessResult) {
-				letterGuessHistory = letterGuessHistory + l;
+				letterGuessHistory = letterGuessHistory + letterGuess;
 			}
 
 		} else return false;
